@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>星级评分</title>
+		<style type="text/css">
+			/*样式初始化*/
+			html body ul li{margin:  0;padding:  0;}
+			/*华丽的分割线*/
+			.rating{display: block;width: 345px;height: 23px;margin: 2% auto;}
+			.rating li{width: 23px;height: 23px;background:#eee;float: left;list-style-type: none;margin:0 23px;cursor: pointer;}
+			.rating .on{background: #FF6600;}
+		</style>
+	</head>
+	<body>
+		<ul id="rating_1" class="rating">
+			<li data-title="很不好"></li>
+			<li data-title="不好"></li>
+			<li data-title="一般"></li>
+			<li data-title="好"></li>
+			<li data-title="很好"></li>
+		</ul>
+		<ul id="rating_2" class="rating">
+			<li data-title="很不好"></li>
+			<li data-title="不好"></li>
+			<li data-title="一般"></li>
+			<li data-title="好"></li>
+			<li data-title="很好"></li>
+		</ul>
+		<ul id="rating_3" class="rating">
+			<li data-title="很不好"></li>
+			<li data-title="不好"></li>
+			<li data-title="一般"></li>
+			<li data-title="好"></li>
+			<li data-title="很好"></li>
+		</ul>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+			//自我命名函数 所有变量为局部变量  闭包
+			(function($){
+				//点亮几颗星
+				function lightOn(Obj,num){
+					Obj.find('li').each(function(i,item){
+						if(i < num){
+							$(this).addClass('on');
+						}else{
+							$(this).removeClass('on');
+						}
+					})
+				}			
+				//事件绑定
+				function bindingLightOn(Obj,num){
+					Obj.on('click','li',function(e){
+						//click 记录缓存当前点亮星星个数
+						num =  $(this).index()+1;
+						var title =  $(this).data('title');
+						lightOn(Obj,num);
+						if((e.pageX-$(this).offset().left) < $(this).width()/2)
+						console.log('半颗:'+'鼠标距离屏幕左边：'+e.pageX+' | 该元素距离屏幕左边:'+$(this).offset().left+' | 宽度：'+$(this).width()/2)
+						else
+						console.log('整颗'+'鼠标距离屏幕左边：'+e.pageX+' | 该元素距离屏幕左边:'+$(this).offset().left+' | 宽度：'+$(this).width()/2)
+					}).on('mouseover','li',function(){
+						lightOn(Obj,$(this).index()+1);
+						
+					}).on('mouseout',function(){
+						lightOn(Obj,num);
+					})
+				}
+				var init = function(el,num){
+					//初始化
+					var Obj = $(el);
+					lightOn(Obj,num);
+					//事件绑定
+					bindingLightOn(Obj,num);
+				};
+				//jQuery 插件
+				$.fn.extend({
+					rating:function(num){
+						return this.each(function(){
+							init(this,num)
+						})
+					}
+				});
+				
+			})(jQuery)
+			$("#rating_1").rating(1);
+			$("#rating_2").rating(2);
+			$("#rating_3").rating(3);
+		</script>
+	</body>
+</html>
